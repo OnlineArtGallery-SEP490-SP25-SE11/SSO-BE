@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
     "lint": "eslint src/**/*.ts"
   },
   "devDependencies": {
