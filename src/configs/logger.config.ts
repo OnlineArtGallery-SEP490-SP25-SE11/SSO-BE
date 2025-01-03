@@ -17,6 +17,10 @@ const logger = pino({
       colorize: true, // Màu sắc
       translateTime: true, // Hiển thị thời gian đẹp (ví dụ: 2024-11-18 12:30:45)
       ignore: "pid,hostname", // Bỏ qua pid và hostname
+      sync: true,
+      worker: {
+        enable: false,
+      },
     },
   },
 });
