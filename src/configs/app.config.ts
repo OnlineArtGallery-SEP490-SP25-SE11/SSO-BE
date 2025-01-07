@@ -42,7 +42,7 @@ class AppConfig {
     this.app.use(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
       (err: HttpException, req: Request, res: Response, next: NextFunction) => {
-        console.error("catch error handler1", err);
+        console.error("catch error handler2", err);
         const statusCode = err.statusCode || 500;
         const message = err.message || "Internal Server Error";
         const errorCode = err.errorCode || null;
