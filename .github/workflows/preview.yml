@@ -21,7 +21,7 @@ jobs:
         run: bun ci
         
       - name: Run linting
-        run: bun run lint
+        run: bun lint
         
       # Uncomment if you have tests
       # - name: Run tests
