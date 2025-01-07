@@ -12,20 +12,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # Thêm bước cài đặt Bun
+      - name: Setup Bun Runtime
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: '18'
+          bun-version: latest
           
       - name: Install dependencies
         run: bun install
         
       - name: Run linting
-        run: bun lint
+        run: bun run lint
         
       # Uncomment if you have tests
       # - name: Run tests
-      #   run: npm test
+      #   run: bun test
 
   deploy-preview:
     needs: test
