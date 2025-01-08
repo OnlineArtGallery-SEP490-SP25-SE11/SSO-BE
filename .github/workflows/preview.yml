@@ -6,6 +6,11 @@ on:
       - preview
     types: [opened, synchronize]
 
+# Thêm permissions
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -29,16 +34,27 @@ jobs:
     environment:
       name: preview
     steps:
-      # Thêm checkout step
-      - uses: actions/checkout@v4
-        
       - name: Deploy to Render
-        uses: Bounceapp/render-action@0.6.0
-        with:
-          render-token: ${{ secrets.RENDER_API_KEY }}
-          service-id: ${{ secrets.RENDER_SERVICE_ID }}
-          retries: 20
-          wait: 16000
-          sleep: 30000
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DEPLOY_URL="https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys"
+          echo "Deploying to $DEPLOY_URL"
+          
+          RESPONSE=$(curl -X POST \
+            "$DEPLOY_URL" \
+            -H "accept: application/json" \
+            -H "authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "content-type: application/json" \
+            -w "\n%{http_code}")
+          
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "Status code: $HTTP_STATUS"
+          echo "Response body: $BODY"
+          
+          if [ "$HTTP_STATUS" -ge 400 ]; then
+            echo "Deploy failed with status $HTTP_STATUS"
+            exit 1
+          fi
+          
+          echo "Deploy triggered successfully"
