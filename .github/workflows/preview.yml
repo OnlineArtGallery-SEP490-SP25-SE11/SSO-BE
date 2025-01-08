@@ -29,6 +29,9 @@ jobs:
     environment:
       name: preview
     steps:
+      # Thêm checkout step
+      - uses: actions/checkout@v4
+        
       - name: Deploy to Render
         uses: Bounceapp/render-action@0.6.0
         with:
@@ -37,3 +40,5 @@ jobs:
           retries: 20
           wait: 16000
           sleep: 30000
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
