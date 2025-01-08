@@ -30,10 +30,10 @@ jobs:
       name: preview
     steps:
       - name: Deploy to Render
-        id: deploy
-        run: |
-          curl -X POST \
-          "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
-          -H "accept: application/json" \
-          -H "authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          -H "content-type: application/json"
+        uses: Bounceapp/render-action@0.6.0
+        with:
+          render-token: ${{ secrets.RENDER_API_KEY }}
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          retries: 20
+          wait: 16000
+          sleep: 30000
