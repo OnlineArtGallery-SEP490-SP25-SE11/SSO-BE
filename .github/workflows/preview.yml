@@ -6,7 +6,6 @@ on:
       - preview
     types: [opened, synchronize]
 
-# Thêm permissions
 permissions:
   contents: read
   pull-requests: write
@@ -34,17 +33,10 @@ jobs:
     environment:
       name: preview
     steps:
-      - name: Deploy to Render
+      - name: Trigger Deploy Hook
         run: |
-          DEPLOY_URL="https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys"
-          echo "Deploying to $DEPLOY_URL"
-          
-          RESPONSE=$(curl -X POST \
-            "$DEPLOY_URL" \
-            -H "accept: application/json" \
-            -H "authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-            -H "content-type: application/json" \
-            -w "\n%{http_code}")
+          echo "Triggering Render deploy..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_DEPLOY_HOOK_URL }})
           
           HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1)
           BODY=$(echo "$RESPONSE" | sed '$d')
