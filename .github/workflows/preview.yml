@@ -6,6 +6,10 @@ on:
       - preview
     types: [opened, synchronize]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -29,11 +33,20 @@ jobs:
     environment:
       name: preview
     steps:
-      - name: Deploy to Render
-        id: deploy
+      - name: Trigger Deploy Hook
         run: |
-          curl -X POST \
-          "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
-          -H "accept: application/json" \
-          -H "authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          -H "content-type: application/json"
+          echo "Triggering Render deploy..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_DEPLOY_HOOK_URL }})
+          
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "Status code: $HTTP_STATUS"
+          echo "Response body: $BODY"
+          
+          if [ "$HTTP_STATUS" -ge 400 ]; then
+            echo "Deploy failed with status $HTTP_STATUS"
+            exit 1
+          fi
+          
+          echo "Deploy triggered successfully"
