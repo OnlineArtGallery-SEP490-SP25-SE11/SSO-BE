@@ -23,17 +23,4 @@ jobs:
       - name: Run linting
         run: bun run lint
 
-  deploy-preview:
-    needs: test
-    runs-on: ubuntu-latest
-    environment:
-      name: preview
-    steps:
-      - name: Deploy to Render
-        id: deploy
-        run: |
-          curl -X POST \
-          "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
-          -H "accept: application/json" \
-          -H "authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          -H "content-type: application/json"
+ 
