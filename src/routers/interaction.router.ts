@@ -1,8 +1,9 @@
 import { Router } from "express";
+import { InteractionController } from "@/controllers/interaction.controller";
 import container from "@/configs/container.config";
-import { TYPES } from "@/types/types";
-import { IInteractionController } from "@/interfaces/controller.interface";
+import { TYPES } from "@/constants/types";
+import roleRequire from "@/configs/middleware.config";
 const router = Router();
-const interactionController = container.get<IInteractionController>(TYPES.InteractionController);
-router.get("/user/blog/:blogId", interactionController.getUserInteractions);
+const interactionController = container.get<InteractionController>(TYPES.InteractionController);
+router.get("/user/blog/:blogId", roleRequire(["user"]), interactionController.getUserInteractions);
 export default router;

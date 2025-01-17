@@ -9,12 +9,15 @@ import { ForbiddenException } from '@/exceptions/http-exception';
 import { NextFunction, Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { IBlogController } from '@/interfaces/controller.interface';
+import { BlogService } from '@/services/blog.service';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '@/types/types';
-import { IBlogService } from '@/interfaces/service.interface';
+import { TYPES } from '@/constants/types';
 
+@injectable()
 export class BlogController implements IBlogController {
-	constructor(private readonly _blogService: BlogService) {
+	constructor(
+		@inject(TYPES.BlogService) private readonly _blogService: BlogService
+	) {
 
 		this.getBlogs = this.getBlogs.bind(this);
 		this.getBlogById = this.getBlogById.bind(this);

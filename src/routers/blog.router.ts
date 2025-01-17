@@ -1,12 +1,12 @@
 import { Router } from "express";
 import roleRequire from "@/configs/middleware.config";
 import { Role } from "@/constants/enum";
+import { TYPES } from "@/constants/types";
+import { BlogController } from "@/controllers/blog.controller";
 import container from "@/configs/container.config";
-import { TYPES } from "@/types/types";
-import { IBlogController } from "@/interfaces/controller.interface";
-
 const router = Router();
-const blogController = container.get<IBlogController>(TYPES.BlogController);
+const blogController = container.get<BlogController>(TYPES.BlogController);
+
 router.get("/", blogController.getBlogs);
 router.get("/published", blogController.getPublishedBlogs);
 router.get(
