@@ -1,6 +1,7 @@
-import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop, type Ref } from "@typegoose/typegoose";
 import { User } from "./user.model";
 import { Status } from "@/constants/enum";
+import { Types } from "mongoose";
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class Blog {
@@ -17,7 +18,7 @@ export class Blog {
   image!: string;
 
   @prop({ ref: () => User, required: true, index: true })
-  userId!: User;
+  author!: Ref<User>;
 
   @prop({
     required: true,
@@ -48,4 +49,10 @@ export class Blog {
   }
 }
 
+
+export type BlogDocument = Blog & {
+  _id: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+};
 export default getModelForClass(Blog, { schemaOptions: { timestamps: true } });
